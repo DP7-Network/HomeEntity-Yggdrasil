@@ -1,0 +1,17 @@
+.idea
+.gradle
+build
+config.conf
+front-end/homeentity-yggdrasil/node_modules
+front-end/homeentity-yggdrasil/build
+front-end/homeentity-yggdrasil/.DS_Store
+front-end/homeentity-yggdrasil/.env.local
+front-end/homeentity-yggdrasil/.env.development.local
+front-end/homeentity-yggdrasil/.env.test.local
+front-end/homeentity-yggdrasil/.env.production.local
+front-end/homeentity-yggdrasil/npm-debug.log*
+front-end/homeentity-yggdrasil/yarn-debug.log*
+front-end/homeentity-yggdrasil/yarn-error.log*
+front-end/homeentity-yggdrasil/coverage
+front-end/homeentity-yggdrasil/.pnp
+front-end/homeentity-yggdrasil/.pnp.js

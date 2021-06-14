@@ -1,0 +1,6 @@
+package cn.thelama.hent.yggdrasil.protocol.admin
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class CSetResource(val url: String)
