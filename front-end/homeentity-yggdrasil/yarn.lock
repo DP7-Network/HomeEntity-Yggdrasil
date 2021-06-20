@@ -1828,6 +1828,11 @@
   dependencies:
     "@types/jest" "*"
 
+"@types/three@^0.128.0":
+  version "0.128.0"
+  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.128.0.tgz#e5ce4c42d138a64dd90e83dbdb9919cf0d424d8e"
+  integrity sha512-Jwq5XYUkzAcPTo34hlGAQGUyAI0b2F3aCCFWG/v7ZhJBEG5HGcusMSr70GhDlT8Gs0f02QnSPZ2RCA1MrCOa/w==
+
 "@types/uglify-js@*":
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/@types/uglify-js/-/uglify-js-3.12.0.tgz#2bb061c269441620d46b946350c8f16d52ef37c5"
@@ -10033,6 +10038,20 @@ sisteransi@^1.0.5:
   resolved "https://registry.yarnpkg.com/sisteransi/-/sisteransi-1.0.5.tgz#134d681297756437cc05ca01370d3a7a571075ed"
   integrity sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==
 
+skinview-utils@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/skinview-utils/-/skinview-utils-0.6.0.tgz#cc6733a117c1ab847db06411c21073cc2e95b575"
+  integrity sha512-4EPsiKIdKY2yTANDYUPf0TKMP6nDFN9BENZ02zdZO7IYmWnLHuFwoLNAi1Oua+3sc5PQp7l+Vvw22poxk67CWw==
+
+skinview3d@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/skinview3d/-/skinview3d-2.0.1.tgz#31a526c1d0d035be30f28b6387f91978d07b0ec1"
+  integrity sha512-QVZiI2sVS1Rurb1M3thxjhtSCW+nb+SBl7yyhEI79xp7mIPDGtojI9R12fyZjRFBas6S0C62FVBO4KG5vPZHIQ==
+  dependencies:
+    "@types/three" "^0.128.0"
+    skinview-utils "^0.6.0"
+    three "^0.128.0"
+
 slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
@@ -10693,6 +10712,11 @@ text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
+
+three@^0.128.0:
+  version "0.128.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.128.0.tgz#884dacca6a330e45600a09ec5439283f50b76aa6"
+  integrity sha512-i0ap/E+OaSfzw7bD1TtYnPo3VEplkl70WX5fZqZnfZsE3k3aSFudqrrC9ldFZfYFkn1zwDmBcdGfiIm/hnbyZA==
 
 throat@^5.0.0:
   version "5.0.0"
