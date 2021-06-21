@@ -1,0 +1,32 @@
+@font-face {
+  font-family: "Sarasa Gothic UI SC";
+  src: url("assets/font/SarasaGothic-UI-SC-Regular.woff2") format("woff2"),
+    url("assets/font/SarasaGothic-UI-SC-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fira Code";
+  src: url("assets/font/FiraCode-Regular.woff2") format("woff2"),
+    url("assets/font/FiraCode-Regular.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Red Hat Display";
+  src: url("assets/font/RedHatDisplay-Medium.woff2") format("woff2"),
+    url("assets/font/RedHatDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Red Hat Text";
+  src: url("assets/font/RedHatDisplay-Medium.woff2") format("woff2"),
+    url("assets/font/RedHatDisplay-Medium.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
