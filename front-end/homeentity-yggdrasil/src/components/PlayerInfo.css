@@ -1,0 +1,46 @@
+@media (max-width: 480px) {
+  #root .playerinfo.container {
+    flex-direction: column !important;
+  }
+}
+@media (max-width: 768px) {
+  #root .playerinfo.container {
+    align-items: center !important;
+  }
+}
+#root .playerinfo.container {
+  display: flex;
+  background-color: rgb(232 240 254 / 70%);
+  border-radius: 9px;
+  padding: 2rem;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+}
+#root .playerinfo.container > * {
+  display: block;
+}
+#root .playerinfo.container .details ul {
+  list-style: none;
+}
+#root .playerinfo.action {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: stretch;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+#root .playerinfo.action > button {
+  background-color: #94c1ff;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: background-color, border-color, color, fill, stroke;
+  box-shadow: 1px 1px 2px 1px rgb(0 0 0 / 10%);
+  height: 3rem;
+  width: -webkit-fille-available;
+  width: -moz-available;
+  cursor: pointer;
+  border: 0 solid transparent;
+  font-size: 1rem;
+  padding: 0.9rem;
+  border-radius: 3rem;
+}

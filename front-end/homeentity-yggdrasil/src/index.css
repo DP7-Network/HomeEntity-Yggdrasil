@@ -1,4 +1,119 @@
-@tailwind base;
-@tailwind components;
-@tailwind screens;
-@tailwind utilities;
+#root {
+  top: 0px;
+  left: 0px;
+  position: absolute;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+
+  width: -webkit-fill-available;
+  width: -moz-available;
+  height: 100%;
+
+  background-image: url("./assets/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+#root::after {
+  filter: blur(3px);
+  background-image: url("./assets/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-size: cover;
+  content: "";
+  width: -webkit-fill-available;
+  width: -moz-available;
+  height: 100%;
+  z-index: -1;
+}
+@media screen and (max-width: 768px) {
+  #root .signin.container {
+    min-width: 0rem !important;
+  }
+  #root .container {
+    flex-grow: 1;
+    border-radius: 0 !important;
+    width: inherit;
+  }
+}
+#root {
+  font-family: "Red Hat Text", "Sarasa Gothic UI SC", sans-serif;
+}
+#root .signin.container {
+  min-width: 30rem;
+  max-width: 50rem;
+  display: flex;
+  background-color: rgb(232 240 254 / 70%);
+  border-radius: 9px;
+  padding: 2rem;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+#root .signin.container > * {
+  margin: 2rem 0;
+}
+#root .signin.container > h1,
+.motd {
+  font-family: "Red Hat Display", "Sarasa Gothic UI SC", sans-serif;
+  margin: 0.5rem 0 !important;
+}
+#root .signin.container > h1 {
+  font-size: 2.5rem;
+  font-family: "Fira Code", "Red Hat Display", "Sarasa Gothic UI SC", sans-serif;
+  color: #000000;
+}
+#root .signin.container > .motd {
+  font-size: 1.2rem;
+  color: #494949;
+}
+#root .signin.input-container {
+  margin: 0.5rem 0 !important;
+}
+#root .signin.input-container > input {
+  border-radius: 0.375rem;
+  border: 0 solid transparent;
+  width: -webkit-fill-available;
+  width: -moz-available;
+  height: 3rem;
+  appearance: none;
+  border-width: 2px;
+  background-color: #d7e5ff;
+  font-size: 1.1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  outline: none;
+}
+#root .signin.input-container > input:focus {
+  border-color: #1967d2;
+}
+#root .signin.container > p {
+  color: #494949;
+}
+#root .signin.container > p > .register-link {
+  color: #1e63c8;
+}
+#root .signin.container > .signin.btn {
+  background-color: #94c1ff;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: background-color, border-color, color, fill, stroke;
+  box-shadow: 1px 1px 2px 1px rgb(0 0 0 / 10%);
+  height: 3rem;
+  width: -webkit-fille-available;
+  width: -moz-available;
+  cursor: pointer;
+  border: 0 solid transparent;
+  font-size: 1.1rem;
+  border-radius: 3rem;
+}

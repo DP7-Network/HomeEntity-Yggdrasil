@@ -15,9 +15,13 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "yarn genFont && craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "genFont": "fsw -f SarasaGothic-UI-SC-Regular --fontPath ./src/assets/font && rm -rf fsw.html",
+    "clean": "rm -rf build",
+    "lint": "prettier-eslint \"*[^build]/**/*[^prod][^bundle].@(css|js|html|json)\"",
+    "format": "prettier-eslint --prettier-last --write \"*[^build]/**/*[^prod][^bundle].@(css|js|html|json)\""
   },
   "eslintConfig": {
     "extends": [
@@ -27,9 +31,11 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
+      "cover 95%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "not ie >= 0",
+      "Firefox ESR"
     ],
     "development": [
       "last 1 chrome version",
@@ -39,7 +45,9 @@
   },
   "devDependencies": {
     "autoprefixer": "^9",
+    "font-spider-walker": "^1.0.2",
     "postcss": "^7",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+    "prettier-eslint-cli": "^5.0.1",
+    "simple-progress-webpack-plugin": "^2.0.0"
   }
 }
