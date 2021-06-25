@@ -2,6 +2,8 @@
 HE-Yggdrasil是Mojang定义的Yggdrasil验证协议的一份JVM实现，使用Ktor框架和Netty引擎完成。
 数据库后端使用高性能的MongoDB。总而言之就是听起来NB，实际上垃圾的东西
 
+有关协议请看：[点击前往](document/protocol.md)
+
 #### 本项目为HomeEntity的附属项目，主项目页面: [点击前往](https://github.com/DP7-Network/HomeEntity)
 
 #### 欢迎加入 .DP7 Project: [Telegram](https://t.me/joinchat/VLCaSV6zKJJjZDQ1)
@@ -10,6 +12,34 @@ HE-Yggdrasil是Mojang定义的Yggdrasil验证协议的一份JVM实现，使用Kt
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 [![Server](https://hello-minecraft-api-production.up.railway.app/api/ping-svg/2704ba23.123nat.com:26588 )](https://hello-minecraft-api-production.up.railway.app/api/ping-svg/2704ba23.123nat.com:26588)
 
+---
+构建代码
+---
+
+### !! 警告 !!: 构建脚本处于WIP状态，以下指令不可用! 
+
+首先Clone下来本仓库，并切换到本仓库文件夹中。
+
+若您需要构建一份**生产环境**版本请执行以下指令
+```shell
+sudo chmod +x ./build.sh && ./build.sh -production
+```
+
+若您需要构建一份**纯后端**版本请执行以下指令
+```shell
+sudo chmod +x ./build.sh && ./build.sh -backend-only
+```
+
+若您需要构建一份**纯前端**版本请执行以下指令
+```shell
+sudo chmod +x ./build.sh && ./build.sh -frontend-only
+```
+
+构建脚本其他参数:
+ + -out <构建结果路径>
+ + -noshadow 后端不进行支持库打包
+ + -quiet 无输出模式
+ + -less 最小输出模式
 ---
 贡献代码
 ---

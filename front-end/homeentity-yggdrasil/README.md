@@ -14,7 +14,7 @@ HE-Yggdrasil FE 是项目 HE-Yggdrasil 的前端部分
 
 ## 贡献代码
 
-首先，您需要一个 Github 账号，您需要熟练地使用 Kotlin、Gradle、Git 以及熟悉 Minecraft 网络验证，否则您的 Pull Request（后文简称 PR）可能会遭到拒绝
+首先，您需要一个 Github 账号，您需要熟练地使用 JS、NodeJS、Git 以及熟悉 React框架，否则您的 Pull Request（后文简称 PR）可能会遭到拒绝
 
 接下来，您需要在 Github 中 fork 这个仓库并 clone 下来 master 分支
 
