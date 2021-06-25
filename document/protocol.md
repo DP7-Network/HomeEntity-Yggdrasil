@@ -89,7 +89,7 @@
       clientToken <- string?
       // 密码
       password <- string
-      requestUser <- boolean = true
+      requestUser <- bool = true
       // 登录用户名
       username <- string 
     }
@@ -157,7 +157,7 @@
       clientToken <- string
       // 刷新访问识别符
       accessToken <- string
-      requestUser <- boolean = true
+      requestUser <- bool = true
       // 选择的用户档案
       selectedProfile <- SelectedProfile
     }
