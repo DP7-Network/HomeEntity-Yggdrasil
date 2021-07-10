@@ -1,6 +1,8 @@
 package cn.thelama.hent.yggdrasil
 
 import cn.thelama.hent.yggdrasil.plugins.*
+import cn.thelama.hent.yggdrasil.protocol.server.SServerMetaRoot
+import cn.thelama.hent.yggdrasil.protocol.server.ServerMeta
 import com.amazonaws.ClientConfiguration
 import com.amazonaws.Protocol
 import com.amazonaws.auth.AWSStaticCredentialsProvider
@@ -37,6 +39,7 @@ lateinit var webSessions: MongoCollection<Document>
 //lateinit var bucket: String
 //var useS3 by Delegates.notNull<Boolean>()
 lateinit var configuration: Config
+lateinit var meta: SServerMetaRoot
 
 fun main(args: Array<String>) {
     if("-no-clear" !in args) {
@@ -104,6 +107,8 @@ fun main(args: Array<String>) {
         println("Error while setting up database! Please check your database settings")
         exitProcess(1)
     }
+
+    meta = SServerMetaRoot(ServerMeta(configuration.getString("server.meta.name"), "HomeEntity-Yggdrasil-1.0"), configuration.getStringList("server.meta.contentDomainWhitelist"))
 
     /*
     println("Setting up amazon s3 client")

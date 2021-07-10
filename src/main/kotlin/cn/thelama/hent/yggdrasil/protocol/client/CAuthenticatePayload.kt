@@ -1,6 +1,6 @@
 package cn.thelama.hent.yggdrasil.protocol.client
 
-import cn.thelama.hent.yggdrasil.protocol.Agent
+import cn.thelama.hent.yggdrasil.protocol.mojang.types.Agent
 import kotlinx.serialization.Serializable
 
 @Serializable

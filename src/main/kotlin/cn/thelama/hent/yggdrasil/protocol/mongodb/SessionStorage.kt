@@ -1,4 +1,4 @@
-package cn.thelama.hent.yggdrasil.protocol
+package cn.thelama.hent.yggdrasil.protocol.mongodb
 
 import kotlinx.serialization.Serializable
 

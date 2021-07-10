@@ -1,12 +1,16 @@
 package cn.thelama.hent.yggdrasil.plugins
 
 import cn.thelama.hent.yggdrasil.*
-import cn.thelama.hent.yggdrasil.protocol.*
 import cn.thelama.hent.yggdrasil.protocol.admin.*
 import cn.thelama.hent.yggdrasil.protocol.client.*
+import cn.thelama.hent.yggdrasil.protocol.mojang.types.AvailableProfile
+import cn.thelama.hent.yggdrasil.protocol.mojang.types.SelectedProfile
+import cn.thelama.hent.yggdrasil.protocol.mojang.types.User
+import cn.thelama.hent.yggdrasil.protocol.mongodb.SessionStorage
+import cn.thelama.hent.yggdrasil.protocol.mongodb.UserStorage
+import cn.thelama.hent.yggdrasil.protocol.mongodb.WebSessionStorage
 import cn.thelama.hent.yggdrasil.protocol.server.SAuthenticatePayload
 import cn.thelama.hent.yggdrasil.protocol.server.SRequestFailedResponse
-import com.amazonaws.services.s3.model.ObjectMetadata
 import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters
 import io.ktor.routing.*
@@ -14,16 +18,11 @@ import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
-import io.ktor.utils.io.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.bson.Document
 import java.io.File
 import java.io.FileOutputStream
-import java.io.InputStream
 import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.util.*
@@ -52,7 +51,9 @@ fun Application.configureRouting() {
             call.respondText("Welcome to HomeEntity Yggdrasil! Main page is still under developing")
         }
         
-        get("/meta") { }
+        get("/meta") {
+            call.respond(Json.encodeToString(meta))
+        }
 
         /**
          * 在Yggdrasil 协议中定义 | 适配 Authlib injector
@@ -83,6 +84,7 @@ fun Application.configureRouting() {
                     call.respond(HttpStatusCode.BadRequest, Json.encodeToString(SRequestFailedResponse("Unsupported Media", "The server is refusing to service the request because the entity of the request is in a format not supported by the requested resource for the requested method. Please check your request body. Make sure they are criterion json format!", "Illegal Content")))
                 }
             } else {
+                log.error("Error on /authserver/authenticate -> Wrong media type! req: ${call.request.contentType().contentType}/${call.request.contentType().contentSubtype}")
                 call.respond(HttpStatusCode.BadRequest, Json.encodeToString(SRequestFailedResponse("Unsupported Media Type", "The server is refusing to service the request because the entity of the request is in a format not supported by the requested resource for the requested method. Please try change the header field: Content-Type to application/json", "Illegal Content-Type Header Field")))
             }
         }
@@ -148,6 +150,11 @@ fun Application.configureRouting() {
         get("/sessionserver/session/minecraft/hasJoined?username={username}&serverId={serverId}&ip={ip}") {}
         get("/sessionserver/session/minecraft/profile/{uuid}?unsigned={unsigned}") {}
         post("/api/profiles/minecraft") {}
+
+        /**
+         * Webclient 网页操作端api
+         * webclient API
+         */
 
         /**
          *                   用户名               密码

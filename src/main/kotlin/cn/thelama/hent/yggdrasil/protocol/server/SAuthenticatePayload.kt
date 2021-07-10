@@ -1,8 +1,8 @@
 package cn.thelama.hent.yggdrasil.protocol.server
 
-import cn.thelama.hent.yggdrasil.protocol.AvailableProfile
-import cn.thelama.hent.yggdrasil.protocol.SelectedProfile
-import cn.thelama.hent.yggdrasil.protocol.User
+import cn.thelama.hent.yggdrasil.protocol.mojang.types.AvailableProfile
+import cn.thelama.hent.yggdrasil.protocol.mojang.types.SelectedProfile
+import cn.thelama.hent.yggdrasil.protocol.mojang.types.User
 import kotlinx.serialization.Serializable
 
 @Serializable
