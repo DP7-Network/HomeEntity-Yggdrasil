@@ -9,12 +9,12 @@
     + [!! /logout](#----logout)
     + [!! /invalidate](#----invalidate)
   * [HomeEntity Yggdrasil Web Protocol](#homeentity-yggdrasil-web-protocol)
-    + [!! /management/login](#----management-login)
-    + [!! /management/changePassword](#----management-changepassword)
-    + [!! /management/setSkin](#----management-setskin)
-    + [!! /management/setCape](#----management-setcape)
-    + [!! /management/register](#----management-register)
-    + [!! /management/online](#----management-online)
+    + [!! /webClient/login](#----webClient-login)
+    + [!! /webClient/changePassword](#----webClient-changepassword)
+    + [!! /webClient/setSkin](#----webClient-setskin)
+    + [!! /webClient/setCape](#----webClient-setcape)
+    + [!! /webClient/register](#----webClient-register)
+    + [!! /webClient/online](#----webClient-online)
 
 ---
 ### 数据类型定义
@@ -27,7 +27,7 @@
 | `<* <- *, ...>` | 泛型范围规定符，规定泛型的继承范围 | 定义区 | `类型A<* <- 类型B>` | `names <- list<* <- string>` |
 | `<...>` | 泛型类型符，确定泛型类型 | 接口区 | `类型A<类型B>` | `names <- list<string>` |
 | `=` | 定值符，确定该值应永远为`=`后内容 | 全局 | `名字 <- 类型 = 值` | `name <- string = lama` |
-| `!!` | 在接口名称前若有!!代表该接口没有异常处理，若返回 `500 Internal Server Error` 代表您请求内容可能含有非法内容或服务器Bug | 接口定义区 | `!! 接口名称` | `!! /management/login` |
+| `!!` | 在接口名称前若有!!代表该接口没有异常处理，若返回 `500 Internal Server Error` 代表您请求内容可能含有非法内容或服务器Bug | 接口定义区 | `!! 接口名称` | `!! /webClient/login` |
 
 - 类型定义: 
    - `bool`: 布尔类型，取值范围: `true` / `false`
@@ -72,7 +72,9 @@
 
 
 ---   
-### Mojang Yggdrasil Protocol
+## Mojang Yggdrasil Protocol
+
+### Authenticate
 
 #### /authenticate
 - 内容: 游戏客户端登录
@@ -268,7 +270,7 @@
 ---
 ### HomeEntity Yggdrasil Web Protocol
 
-#### !! /management/login
+#### !! /webClient/login
 - 内容: 网页登录
 - 请求方法: `POST`
 - 请求头:
@@ -289,7 +291,7 @@
   - Http返回码: `403 Forbidden`
     - 原因: 账号/密码错误
   
-#### !! /management/changePassword
+#### !! /webClient/changePassword
 - 内容: 修改密码
 - 请求方法: `POST`
 - 请求头:
@@ -311,7 +313,7 @@
   - Http返回码: `401 Unauthorized`
     - 原因: 未携带Cookie或Cookie值不正确
 
-#### !! /management/setSkin
+#### !! /webClient/setSkin
 - 内容: 设置皮肤
 - 请求方法: `POST`
 - 请求头:
@@ -332,7 +334,7 @@
   - Http返回码: `401 Unauthorized`
     - 原因: 未携带Cookie或Cookie值不正确
 
-#### !! /management/setCape
+#### !! /webClient/setCape
 - 内容: 设置披风
 - 请求方法: `POST`
 - 请求头:
@@ -353,7 +355,7 @@
   - Http返回码: `401 Unauthorized`
     - 原因: 未携带Cookie或Cookie值不正确
 
-#### !! /management/register
+#### !! /webClient/register
 - 内容: 注册
 - 请求方法: `POST`
 - 请求头:
@@ -375,7 +377,7 @@
   - Http返回码: `200 OK`
     - 原因: 账号已被注册
 
-#### !! /management/online
+#### !! /webClient/online
 - 内容: 列出在线人员列表
 - 请求方法: `GET`
 - 正常返回:

@@ -1,13 +1,12 @@
 package cn.thelama.hent.yggdrasil.plugins
 
+import cn.thelama.hent.yggdrasil.*
 import cn.thelama.hent.yggdrasil.protocol.*
 import cn.thelama.hent.yggdrasil.protocol.admin.*
 import cn.thelama.hent.yggdrasil.protocol.client.*
 import cn.thelama.hent.yggdrasil.protocol.server.SAuthenticatePayload
 import cn.thelama.hent.yggdrasil.protocol.server.SRequestFailedResponse
-import cn.thelama.hent.yggdrasil.sessions
-import cn.thelama.hent.yggdrasil.users
-import cn.thelama.hent.yggdrasil.webSessions
+import com.amazonaws.services.s3.model.ObjectMetadata
 import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters
 import io.ktor.routing.*
@@ -15,9 +14,12 @@ import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.bson.Document
+import java.io.InputStream
 import java.security.MessageDigest
 import java.util.*
 import kotlin.math.abs
@@ -28,13 +30,17 @@ private val RANDOM = Random()
 fun Application.configureRouting() {
     routing {
         get("/") {
+            call.response.header("X-Authlib-Injector-API-Location", "/meta")
             call.respondText("Welcome to HomeEntity Yggdrasil! Main page is still under developing")
         }
+        
+        get("/meta") { }
 
         /**
-         * 在Yggdrasil 协议中定义
+         * 在Yggdrasil 协议中定义 | 适配 Authlib injector
+         * Autenticate API
          */
-        post("/authenticate") {
+        post("/authserver/authenticate") {
             if(call.request.contentType() == ALLOWED_CONTENT_TYPE) {
                 kotlin.runCatching {
                     val req = call.receive(CAuthenticatePayload::class)
@@ -62,7 +68,7 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.BadRequest, Json.encodeToString(SRequestFailedResponse("Unsupported Media Type", "The server is refusing to service the request because the entity of the request is in a format not supported by the requested resource for the requested method. Please try change the header field: Content-Type to application/json", "Illegal Content-Type Header Field")))
             }
         }
-        post("/refresh") {
+        post("/authserver/refresh") {
             if(call.request.contentType() == ALLOWED_CONTENT_TYPE) {
                 val req = call.receive(CRefreshSessionPayload::class)
                 val d = sessions.findOneAndUpdate(Filters.eq("accessToken", req.accessToken), Document("\$set", Document("expireTime", System.currentTimeMillis() + 86400000 * 3)))
@@ -76,7 +82,7 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.BadRequest, Json.encodeToString(SRequestFailedResponse("Unsupported Media Type", "The server is refusing to service the request because the entity of the request is in a format not supported by the requested resource for the requested method. Please try change the header field: Content-Type to application/json", "Illegal Content-Type Header Field")))
             }
         }
-        post("/validate") {
+        post("/authserver/validate") {
             if(call.request.contentType() == ALLOWED_CONTENT_TYPE) {
                 val req = call.receive(CValidate::class)
                 val d = sessions.find(Filters.eq("accessToken", req.accessToken)).iterator().tryNext()
@@ -91,7 +97,7 @@ fun Application.configureRouting() {
                 }
             }
         }
-        post("/signout") {
+        post("/authserver/signout") {
             if (call.request.contentType() == ALLOWED_CONTENT_TYPE) {
                 val req = call.receive(CSignout::class)
                 val lookup = users.find(Filters.eq("username", req.username)).filter(Filters.eq("password", sha256(req.password))).iterator().tryNext()
@@ -103,7 +109,7 @@ fun Application.configureRouting() {
                 }
             }
         }
-        post("/invalidate") {
+        post("/authserver/invalidate") {
             if(call.request.contentType() == ALLOWED_CONTENT_TYPE) {
                 val req = call.receive(CInvalidateToken::class)
                 val d = sessions.deleteMany(Filters.eq("accessToken", req.accessToken)).deletedCount
@@ -116,13 +122,23 @@ fun Application.configureRouting() {
         }
 
         /**
+         * 在Yggdrasil 协议中定义 | 适配 Authlib injector
+         * Autenticate API
+         */
+
+        post("/sessionserver/session/minecraft/join") {}
+        get("/sessionserver/session/minecraft/hasJoined?username={username}&serverId={serverId}&ip={ip}") {}
+        get("/sessionserver/session/minecraft/profile/{uuid}?unsigned={unsigned}") {}
+        post("/api/profiles/minecraft") {}
+
+        /**
          *                   用户名               密码
          * 登录 参数: Json { username -> String, password -> String }
          * 返回:
          *   204 -> 成功，并携带网页验证用Cookie
          *   403 -> 失败，账号/密码不正确
          */
-        post("/management/login") {
+        post("/webClient/login") {
             if(call.request.contentType() == ALLOWED_CONTENT_TYPE) {
                 val req = call.receive(CLoginPayload::class)
                 val lookup = users.find(Filters.eq("username", req.username)).filter(Filters.eq("password", sha256(req.password))).iterator().tryNext()
@@ -146,7 +162,7 @@ fun Application.configureRouting() {
          *   403 -> 失败，老密码不正确
          *   401 -> 未携带Token Cookie或Cookie值不正确
          */
-        post("/management/changePassword") {
+        post("/webClient/changePassword") {
             if(call.request.contentType() == ALLOWED_CONTENT_TYPE) {
                 val cookie = call.request.cookies["Token"]
                 if(cookie == null) {
@@ -187,7 +203,7 @@ fun Application.configureRouting() {
          *   500 -> 失败，内部错误，联系开发者解决
          *   401 -> 失败，未携带Token Cookie或Cookie值不正确
          */
-        post("/management/setSkin") {
+        post("/webClient/setSkin") {
             if(call.request.contentType() == ALLOWED_CONTENT_TYPE) {
                 val cookie = call.request.cookies["Token"]
                 if(cookie == null) {
@@ -227,7 +243,7 @@ fun Application.configureRouting() {
          *   500 -> 失败，内部错误，联系开发者解决
          *   401 -> 失败，未携带Token Cookie或Cookie值不正确
          */
-        post("/management/setCape") {
+        post("/webClient/setCape") {
             if(call.request.contentType() == ALLOWED_CONTENT_TYPE) {
                 val cookie = call.request.cookies["Token"]
                 if(cookie == null) {
@@ -267,7 +283,7 @@ fun Application.configureRouting() {
          *   200 -> 失败，账号已被注册
          *   400 -> 失败，请求格式不正确
          */
-        post("/management/register") {
+        post("/webClient/register") {
             if(call.request.contentType() == ALLOWED_CONTENT_TYPE) {
                 kotlin.runCatching {
                     val req = call.receive(CRegisterPayload::class)
@@ -291,7 +307,7 @@ fun Application.configureRouting() {
          *          在线人数                 名称列表
          *   Json { count -> Int, names -> List<String> }
          */
-        get("/management/online") {
+        get("/webClient/online") {
             val result = sessions.find()
             val names = mutableListOf<String>()
             result.forEach {
@@ -299,6 +315,8 @@ fun Application.configureRouting() {
             }
             call.respond(HttpStatusCode.OK, Json.encodeToString(SOnlines(result.count(), names)))
         }
+
+        put("/webClient/uploadUserContent?type={type}&override={or}") { }
     }
 }
 
