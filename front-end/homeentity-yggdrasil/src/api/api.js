@@ -1,12 +1,13 @@
 import axios from "axios";
 import { JsonWrappedURL, LoginPayload, PasswordChangePayload, RegisterPayload } from "./protocol";
 
-const ENDPOINT_LOGIN = "/management/login"
-const ENDPOINT_REGISTER = "/management/register"
-const ENDPOINT_CHANGE_PWD = "/management/changePassword"
-const ENDPOINT_SET_SKIN = "/management/setSkin"
-const ENDPOINT_SET_CAPE = "/management/setCape"
-const ENDPOINT_GET_ONLINE_LIST = "/management/online"
+const ENDPOINT_LOGIN = "/webClient/login"
+const ENDPOINT_REGISTER = "/webClient/register"
+const ENDPOINT_CHANGE_PWD = "/webClient/changePassword"
+const ENDPOINT_SET_SKIN = "/webClient/setSkin"
+const ENDPOINT_SET_CAPE = "/webClient/setCape"
+const ENDPOINT_GET_ONLINE_LIST = "/webClient/online"
+const ENDPOINT_UPLOAD_USER_CONTENT = "/webClient/uploadUserContent"
 
 let baseURL = null
 
@@ -48,20 +49,25 @@ class WebSession {
     }
 
     changePassword(oldPassword, newPassword, callback) {
-        axios({method: "POST",url: baseURL + ENDPOINT_CHANGE_PWD, data: PasswordChangePayload(oldPassword, newPassword), headers: { "Cookie": { "Token": this.token } } }).then((result) => {
+        axios({method: "POST", url: baseURL + ENDPOINT_CHANGE_PWD, data: PasswordChangePayload(oldPassword, newPassword), headers: { "Cookie": { "Token": this.token } } }).then((result) => {
             callback(result.status)
         })
     }
 
     setSkin(url, callback) {
-        axios({method: "POST",url: baseURL + ENDPOINT_SET_SKIN, data: JsonWrappedURL(url), headers: { "Cookie": { "Token": this.token } } }).then((result) => {
+        axios({method: "POST", url: baseURL + ENDPOINT_SET_SKIN, data: JsonWrappedURL(url), headers: { "Cookie": { "Token": this.token } } }).then((result) => {
             callback(result.status)
         })
     }
 
     setCape(url, callback) {
-        axios({ method: "POST",url: baseURL + ENDPOINT_SET_CAPE, data: JsonWrappedURL(url), headers: { "Cookie": { "Token": this.token } } }).then((result) => {
+        axios({ method: "POST", url: baseURL + ENDPOINT_SET_CAPE, data: JsonWrappedURL(url), headers: { "Cookie": { "Token": this.token } } }).then((result) => {
             callback(result.status)
         })
+    }
+
+    uploadUserContent(content, callback) {
+        // TODO Upload file to backend
+        //axios({ method: "PUT", url: baseURL + ENDPOINT_UPLOAD_USER_CONTENT, data: })
     }
 }

@@ -14,20 +14,38 @@ import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
+import io.ktor.utils.io.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.bson.Document
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
+import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.util.*
 import kotlin.math.abs
 
 private val ALLOWED_CONTENT_TYPE = ContentType.parse("application/json")
 private val RANDOM = Random()
+private val userContentRoot = File("user-content")
+private val skinBaseDir = File(userContentRoot, "skins")
+private val capeBaseDir = File(userContentRoot, "capes")
 
 fun Application.configureRouting() {
+    if(!userContentRoot.exists()) {
+        userContentRoot.mkdir()
+    }
+    if(!skinBaseDir.exists()) {
+        skinBaseDir.mkdir()
+    }
+    if(!capeBaseDir.exists()) {
+        capeBaseDir.mkdir()
+    }
+
     routing {
         get("/") {
             call.response.header("X-Authlib-Injector-API-Location", "/meta")
@@ -316,7 +334,80 @@ fun Application.configureRouting() {
             call.respond(HttpStatusCode.OK, Json.encodeToString(SOnlines(result.count(), names)))
         }
 
-        put("/webClient/uploadUserContent?type={type}&override={or}") { }
+        /**
+         *
+         * 上传用户资源(皮肤/披风)
+         * 请求参数:
+         *   type -> 上传类型 <skin|cape>
+         * 返回:
+         *   200 -> 成功
+         *   401 -> 失败，未携带Token Cookie或Cookie值不正确
+         */
+        put("/webClient/uploadUserContent") {
+            val cookie = call.request.cookies["Token"]
+            if(cookie == null) {
+                call.respond(HttpStatusCode.Forbidden)
+                return@put
+            }
+
+            val lookup = webSessions.find(Filters.eq("token", cookie)).iterator().tryNext()
+            if(lookup == null || lookup.getLong("expire") < System.currentTimeMillis()) {
+                call.respond(HttpStatusCode.Unauthorized)
+            }
+
+            val t = context.request.queryParameters["type"]
+            val file = when(t) {
+                "skin" -> File(skinBaseDir, "${lookup["username"] as String}.tmp").apply {
+                    if (exists()) {
+                        delete()
+                    }
+                    createNewFile()
+                }
+                "cape" -> File(capeBaseDir, "${lookup["username"] as String}.tmp").apply {
+                    if(exists()) {
+                        delete()
+                    }
+                    createNewFile()
+                }
+                else -> {
+                    call.respond(HttpStatusCode.BadRequest)
+                    return@put
+                }
+            }
+
+            val lenRaw = context.request.headers["Content-Length"]
+            if(lenRaw != null) {
+                val len = lenRaw.toLongOrNull()
+                if(len != null) {
+                    if(len < 10_000_000) {
+                        val digest = MessageDigest.getInstance("SHA-256")
+                        val buffer = ByteBuffer.allocate(len.toInt())
+                        val channel = context.receiveChannel()
+                        channel.readFully(buffer)
+                        println("Buffer len: ${buffer.capacity()}")
+                        buffer.position(0)
+                        val os = FileOutputStream(file)
+                        val osChannel = os.channel
+                        var writeLen = osChannel.write(buffer)
+                        println("Write len: $writeLen")
+                        while(writeLen != 0) {
+                            writeLen = osChannel.write(buffer)
+                            println("Write len: $writeLen")
+                        }
+                        os.close()
+                        digest.update(buffer)
+                        file.renameTo(File(if(t == "skin") skinBaseDir else capeBaseDir, digest.digest().joinToString(separator = "") { byte -> "%02x".format(byte) }))
+                        context.respond(HttpStatusCode.OK)
+                    } else {
+                        context.respond(HttpStatusCode.BadRequest)
+                    }
+                } else {
+                    context.respond(HttpStatusCode.BadRequest)
+                }
+            } else {
+                context.respond(HttpStatusCode.BadRequest)
+            }
+        }
     }
 }
 
